@@ -30,7 +30,7 @@ For APIs which are not compliant with [RFC6750], the key for the token in each l
 app.use(bearerToken({
   bodyKey: 'access_token',
   queryKey: 'access_token',
-  headerKey: 'bearer'
+  headerKey: 'Bearer'
 }));
 ```
 
