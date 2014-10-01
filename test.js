@@ -52,7 +52,7 @@ describe('bearerToken', function () {
     });
   });
 
-  it('stops looking for token after first is found', function (done) {
+  it('aborts with 400 if token is provided in more than one location', function (done) {
     var req = {
       query: {
         access_token: 'query-token'
@@ -64,14 +64,13 @@ describe('bearerToken', function () {
         authorization: 'bearer header-token'
       },
     };
-    bearerToken()(req, {}, function () {
-      expect(req.token).to.equal(req.query.access_token);
-      delete req.query;
-      bearerToken()(req, {}, function () {
-        expect(req.token).to.equal(req.body.access_token);
+    var res = {
+      send: function (code) {
+        expect(code).to.equal(400);
         done();
-      });
-    });
+      }
+    }
+    bearerToken()(req, res);
   });
 
 

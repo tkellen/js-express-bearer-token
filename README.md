@@ -5,12 +5,13 @@
 
 ## What?
 
-This extracts a bearer token from a request and places it on `req.token`.  It looks for the token in three places, stopping at the first one found, in this order:
+Per [RFC6750] this module will attempt to extract a bearer token from a request from these locations:
 
-1. The key `access_token` in the request body.
-2. The key `access_token` in the request params.
-3. The value from the header `Authorization: bearer <token>`.
+* The key `access_token` in the request body.
+* The key `access_token` in the request params.
+* The value from the header `Authorization: Bearer <token>`.
 
+If a token is found, it will be stored on `req.token`.  If one has been provided in more than one location, this will abort the request immediately by sending code 400 (per [RFC6750]).
 
 ```js
 const express = require('express');
@@ -24,11 +25,13 @@ app.use(function (req, res) {
 app.listen(8000);
 ```
 
-The key to look under for the token in each location is customizable like so (default configuration shown):
+For APIs which are not compliant with [RFC6750], the key for the token in each location is customizable (default configuration shown):
 ```js
 app.use(bearerToken({
   bodyKey: 'access_token',
   queryKey: 'access_token',
   headerKey 'bearer'
-}))
+}));
 ```
+
+[RFC6750]: https://xml.resource.org/html/rfc6750
