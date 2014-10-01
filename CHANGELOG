@@ -1,3 +1,7 @@
+v2.0.0:
+  date: 2014-09-01
+  changes:
+    - Support custom access_token keys.
 v1.0.1:
   date: 2014-09-01
   changes:

@@ -6,7 +6,7 @@ describe('bearerToken', function () {
 
   it('finds a bearer token in post body under "access_token" and sets it to req.token', function (done) {
     var req = {body:{access_token:token}};
-    bearerToken(req, {}, function () {
+    bearerToken()(req, {}, function () {
       expect(req.token).to.equal(token);
       done();
     });
@@ -14,15 +14,39 @@ describe('bearerToken', function () {
 
   it('finds a bearer token in query string under "access_token" and sets it to req.token', function (done) {
     var req = {query:{access_token:token}};
-    bearerToken(req, {}, function () {
+    bearerToken()(req, {}, function () {
       expect(req.token).to.equal(token);
       done();
     });
   });
 
-  it('finds a bearer token in headers under "authorization" and sets it to req.token', function (done) {
+  it('finds a bearer token in headers under "authorization: bearer" and sets it to req.token', function (done) {
     var req = {headers:{authorization:'Bearer '+token}};
-    bearerToken(req, {}, function () {
+    bearerToken()(req, {}, function () {
+      expect(req.token).to.equal(token);
+      done();
+    });
+  });
+
+  it('finds a bearer token in post body under an arbitrary key and sets it to req.token', function (done) {
+    var req = {body:{test:token}};
+    bearerToken({bodyKey:'test'})(req, {}, function () {
+      expect(req.token).to.equal(token);
+      done();
+    });
+  });
+
+  it('finds a bearer token in query string under "access_token" and sets it to req.token', function (done) {
+    var req = {query:{test:token}};
+    bearerToken({queryKey:'test'})(req, {}, function () {
+      expect(req.token).to.equal(token);
+      done();
+    });
+  });
+
+  it('finds a bearer token in headers under "authorization: <anykey>" and sets it to req.token', function (done) {
+    var req = {headers:{authorization:'test '+token}};
+    bearerToken({headerKey:'test'})(req, {}, function () {
       expect(req.token).to.equal(token);
       done();
     });
@@ -40,10 +64,10 @@ describe('bearerToken', function () {
         authorization: 'bearer header-token'
       },
     };
-    bearerToken(req, {}, function () {
+    bearerToken()(req, {}, function () {
       expect(req.token).to.equal(req.query.access_token);
       delete req.query;
-      bearerToken(req, {}, function () {
+      bearerToken()(req, {}, function () {
         expect(req.token).to.equal(req.body.access_token);
         done();
       });
