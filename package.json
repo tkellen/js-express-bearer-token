@@ -2,21 +2,21 @@
   "name": "express-bearer-token",
   "description": "Bearer token middleware for express.",
   "version": "2.0.0",
-  "homepage": "https://github.com/tkellen/express-bearer-token",
+  "homepage": "https://github.com/tkellen/node-express-bearer-token",
   "authors": [
     "Tyler Kellen <tyler@sleekcode.net>"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/tkellen/express-bearer-token.git"
+    "url": "git://github.com/tkellen/node-express-bearer-token.git"
   },
   "bugs": {
-    "url": "https://github.com/tkellen/express-bearer-token/issues"
+    "url": "https://github.com/tkellen/node-express-bearer-token/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/tkellen/express-bearer-token/blob/master/LICENSE"
+      "url": "https://github.com/tkellen/node-express-bearer-token/blob/master/LICENSE"
     }
   ],
   "main": "index.js",
