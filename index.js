@@ -5,6 +5,7 @@ module.exports = function(opts) {
   var queryKey = opts.queryKey || 'access_token';
   var bodyKey = opts.bodyKey || 'access_token';
   var headerKey = opts.headerKey || 'Bearer';
+  var reqKey = opts.reqKey || 'token';
   return function (req, res, next) {
     var token, error;
 
@@ -34,7 +35,7 @@ module.exports = function(opts) {
     if (error) {
       res.send(400);
     } else {
-      req.token = token;
+      req[reqKey] = token;
       next();
     }
   };

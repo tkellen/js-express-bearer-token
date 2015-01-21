@@ -52,6 +52,15 @@ describe('bearerToken', function () {
     });
   });
 
+  it('finds a bearer token and sets it to req[<anykey>]', function (done) {
+    var req = {body:{access_token:token}};
+    var reqKey = 'test';
+    bearerToken({reqKey:reqKey})(req, {}, function() {
+      expect(req[reqKey]).to.equal(token);
+      done();
+    });
+  });
+
   it('aborts with 400 if token is provided in more than one location', function (done) {
     var req = {
       query: {
