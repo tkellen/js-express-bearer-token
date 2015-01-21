@@ -1,7 +1,7 @@
 {
   "name": "express-bearer-token",
   "description": "Bearer token middleware for express.",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "homepage": "https://github.com/tkellen/node-express-bearer-token",
   "authors": [
     "Tyler Kellen <tyler@sleekcode.net>"
