@@ -25,12 +25,13 @@ app.use(function (req, res) {
 app.listen(8000);
 ```
 
-For APIs which are not compliant with [RFC6750], the key for the token in each location is customizable (default configuration shown):
+For APIs which are not compliant with [RFC6750], the key for the token in each location is customizable, as is the key the token is bound to on the request (default configuration shown):
 ```js
 app.use(bearerToken({
   bodyKey: 'access_token',
   queryKey: 'access_token',
-  headerKey: 'Bearer'
+  headerKey: 'Bearer',
+  reqKey: 'token'
 }));
 ```
 
