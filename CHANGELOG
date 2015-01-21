@@ -1,3 +1,7 @@
+v2.1.0:
+  date: 2015-01-21
+  changes:
+    - Support custom req key.
 v2.0.0:
   date: 2014-09-01
   changes:
