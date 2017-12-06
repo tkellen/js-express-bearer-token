@@ -1,4 +1,4 @@
-# express-bearer-token [![Build Status](https://secure.travis-ci.org/tkellen/node-express-bearer-token.png)](http://travis-ci.org/tkellen/node-express-bearer-token)
+# express-bearer-token [![Build Status](https://secure.travis-ci.org/tkellen/js-express-bearer-token.png)](http://travis-ci.org/tkellen/js-express-bearer-token)
 > Bearer token middleware for express.
 
 [![NPM](https://nodei.co/npm/express-bearer-token.png)](https://nodei.co/npm/express-bearer-token/)

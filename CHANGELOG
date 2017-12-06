@@ -1,3 +1,7 @@
+v2.1.1:
+  date: 2017-12-06
+  changes:
+    - Update express api - `res.send(code)` to `res.status(code).send()`
 v2.1.0:
   date: 2015-01-21
   changes:
