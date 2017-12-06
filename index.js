@@ -33,7 +33,7 @@ module.exports = function(opts) {
     // RFC6750 states the access_token MUST NOT be provided
     // in more than one place in a single request.
     if (error) {
-      res.send(400);
+      res.status(400).send();
     } else {
       req[reqKey] = token;
       next();

@@ -74,8 +74,12 @@ describe('bearerToken', function () {
       },
     };
     var res = {
-      send: function (code) {
-        expect(code).to.equal(400);
+      status: function (code) {
+        res.code = code;
+        return res;
+      },
+      send: function () {
+        expect(res.code).to.equal(400);
         done();
       }
     }
