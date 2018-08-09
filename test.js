@@ -1,12 +1,13 @@
 const expect = require('chai').expect;
 const bearerToken = require('./');
+const cookie = require('cookie-signature');
 
 describe('bearerToken', function () {
   var token = 'test-token';
 
   it('finds a bearer token in post body under "access_token" and sets it to req.token', function (done) {
     var req = {body:{access_token:token}};
-    bearerToken()(req, {}, function () {
+    bearerToken('secret')(req, {}, function () {
       expect(req.token).to.equal(token);
       done();
     });
@@ -52,9 +53,17 @@ describe('bearerToken', function () {
     });
   });
 
-  it('finds a bearer token in header cookies[<anykey>] and sets it to req.token', function (done) {
+  it('finds a bearer token in header SIGNED cookies[<anykey>] and sets it to req.token', function (done) {
+    var req = { headers: { cookies: 'test=' + cookie.sign(token, 'secret') + '; ' } };
+    bearerToken({ cookie: { key:'test', signed: true, secret: 'secret' }})(req, {}, function () {
+      expect(req.token).to.equal(token);
+      done();
+    });
+  });
+
+  it('finds a bearer token in header NON SIGNED cookies[<anykey>] and sets it to req.token', function (done) {
     var req = {headers:{cookies: 'test='+token+'; '}};
-    bearerToken({cookieKey:'test'})(req, {}, function () {
+    bearerToken({cookie:{key: 'test'}})(req, {}, function () {
       expect(req.token).to.equal(token);
       done();
     });
