@@ -1,7 +1,8 @@
 v2.2.0:
   date: 2018-08-09
   changes:
-    - search for bearer in signed/unsigned cookies header 
+    - search for bearer in signed/unsigned cookies header
+    - added typescript support
 v2.1.1:
   date: 2017-12-06
   changes:
