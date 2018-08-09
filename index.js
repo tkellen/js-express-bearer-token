@@ -1,5 +1,5 @@
-const unsignCookie = require('cookie-signature').unsign;
 const parseCookie = require('cookie').parse;
+const decodeCookie = require('cookie-parser').signedCookie;
 
 const getCookie = (serialized_cookies, key) => parseCookie(serialized_cookies)[key] || false;
 
@@ -13,11 +13,14 @@ module.exports = function(opts) {
     cookie = false,
   } = opts || {};
 
-  const cookieKey = 'access_token';
 
-  return function (req, res, next) {
-    try {
+  if (cookie && !cookie.key) { cookie.key = ACCESS_TOKEN };
+  if (cookie && cookie.signed && !cookie.secret) {
+    throw new Error('[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property');
+  }
 
+  try {
+    return function (req, res, next) {
       let token, error;
 
       // query
@@ -47,25 +50,19 @@ module.exports = function(opts) {
         }
 
         // cookie
-        if (cookie && req.headers.cookies) {
+        if (cookie && req.headers.cookie) {
+          const plainCookie = getCookie(req.headers.cookie || '', cookie.key); // seeks the key
+          if (plainCookie) {
+            const cookieToken = (cookie.signed) ? decodeCookie(plainCookie, cookie.secret) : plainCookie;
 
-          if (cookie.signed && !cookie.secret) {
-            throw new Error('[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property');
-          }
-
-          if (!cookie.key) {
-            cookie.key = cookieKey;
-          }
-
-          const plainCookie = getCookie(req.headers.cookies || '', cookie.key);
-          const cookieToken = (cookie.signed) ? unsignCookie(plainCookie, cookie.secret) : plainCookie;
-          
-          if (cookieToken) {
-            if (token) {
-              error = true;
+            if (cookieToken) {
+              if (token) {
+                error = true;
+              }
+              token = cookieToken;
             }
-            token = cookieToken;
           }
+          
         }
       }
 
@@ -77,9 +74,9 @@ module.exports = function(opts) {
         req[reqKey] = token;
         next();
       }
-    } catch (e) {
-      console.error(e);
-      next(e);
-    }
-  };
+    
+    };
+  } catch (e) {
+    console.error(e);
+  }
 };
