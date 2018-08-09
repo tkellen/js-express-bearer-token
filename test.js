@@ -58,7 +58,7 @@ describe('bearerToken', function () {
     // simulate the res.cookie signed prefix 's:'
     var signedCookie = encodeURI('s:' + cookie.sign(token, secret)); 
     var req = { headers: { cookie: 'test=' + signedCookie + '; ' } };
-    bearerToken({ cookie: { key:'test', signed: true, secret }})(req, {}, function () {
+    bearerToken({ cookie: { key:'test', signed: true, secret: secret } })(req, {}, function () {
       expect(req.token).to.equal(token);
       done();
     });
