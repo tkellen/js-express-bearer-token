@@ -1,27 +1,30 @@
-const parseCookie = require('cookie').parse;
-const decodeCookie = require('cookie-parser').signedCookie;
+var parseCookie = require('cookie').parse;
+var decodeCookie = require('cookie-parser').signedCookie;
 
-const getCookie = (serialized_cookies, key) => parseCookie(serialized_cookies)[key] || false;
+function getCookie (serialized_cookies, key) { return parseCookie(serialized_cookies)[key] || false };
 
 module.exports = function(opts) {
   try {
 
-    const {
-      queryKey = 'access_token',
-      bodyKey = 'access_token',
-      headerKey = 'Bearer',
-      reqKey = 'token',
-      cookie = false,
-    } = opts || {};
+    if (!opts) {
+      opts = {
+        cookie: false,
+      }
+    }
 
-
+    var queryKey = opts.queryKey || 'access_token';
+    var bodyKey = opts.bodyKey || 'access_token';
+    var headerKey = opts.headerKey || 'Bearer';
+    var reqKey = opts.reqKey || 'token';
+    var cookie = opts.cookie;
+    
     if (cookie && !cookie.key) { cookie.key = ACCESS_TOKEN };
     if (cookie && cookie.signed && !cookie.secret) {
       throw new Error('[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property');
     }
 
     return function (req, res, next) {
-      let token, error;
+      var token, error;
 
       // query
       if (req.query && req.query[queryKey]) {
@@ -51,9 +54,9 @@ module.exports = function(opts) {
 
         // cookie
         if (cookie && req.headers.cookie) {
-          const plainCookie = getCookie(req.headers.cookie || '', cookie.key); // seeks the key
+          var plainCookie = getCookie(req.headers.cookie || '', cookie.key); // seeks the key
           if (plainCookie) {
-            const cookieToken = (cookie.signed) ? decodeCookie(plainCookie, cookie.secret) : plainCookie;
+            var cookieToken = (cookie.signed) ? decodeCookie(plainCookie, cookie.secret) : plainCookie;
 
             if (cookieToken) {
               if (token) {
