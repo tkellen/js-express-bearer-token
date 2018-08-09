@@ -4,22 +4,22 @@ const decodeCookie = require('cookie-parser').signedCookie;
 const getCookie = (serialized_cookies, key) => parseCookie(serialized_cookies)[key] || false;
 
 module.exports = function(opts) {
-
-  const {
-    queryKey = 'access_token',
-    bodyKey = 'access_token',
-    headerKey = 'Bearer',
-    reqKey = 'token',
-    cookie = false,
-  } = opts || {};
-
-
-  if (cookie && !cookie.key) { cookie.key = ACCESS_TOKEN };
-  if (cookie && cookie.signed && !cookie.secret) {
-    throw new Error('[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property');
-  }
-
   try {
+
+    const {
+      queryKey = 'access_token',
+      bodyKey = 'access_token',
+      headerKey = 'Bearer',
+      reqKey = 'token',
+      cookie = false,
+    } = opts || {};
+
+
+    if (cookie && !cookie.key) { cookie.key = ACCESS_TOKEN };
+    if (cookie && cookie.signed && !cookie.secret) {
+      throw new Error('[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property');
+    }
+
     return function (req, res, next) {
       let token, error;
 
