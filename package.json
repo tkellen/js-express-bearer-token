@@ -35,5 +35,8 @@
     "bearer token middleware",
     "express token",
     "authorization bearer"
-  ]
+  ],
+  "dependencies": {
+    "cookie": "^0.3.1"
+  }
 }

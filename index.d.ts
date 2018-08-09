@@ -52,6 +52,11 @@ declare namespace bearerToken {
          * Specify the key that will be used to bind the token to (if found on the request).
          */
         reqKey?: string;
+
+        /**
+         * Specify the key that will be used as cookie containing the access token.
+         */
+        cookieKey?: string;
     }
     function bearerToken(options?: BearerTokenOptions): express.Handler;
 }

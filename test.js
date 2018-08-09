@@ -52,6 +52,14 @@ describe('bearerToken', function () {
     });
   });
 
+  it('finds a bearer token in header cookies[<anykey>] and sets it to req.token', function (done) {
+    var req = {headers:{cookies: 'test='+token+'; '}};
+    bearerToken({cookieKey:'test'})(req, {}, function () {
+      expect(req.token).to.equal(token);
+      done();
+    });
+  });
+
   it('finds a bearer token and sets it to req[<anykey>]', function (done) {
     var req = {body:{access_token:token}};
     var reqKey = 'test';
@@ -60,6 +68,8 @@ describe('bearerToken', function () {
       done();
     });
   });
+
+  
 
   it('aborts with 400 if token is provided in more than one location', function (done) {
     var req = {
@@ -70,7 +80,8 @@ describe('bearerToken', function () {
         access_token: 'query-token'
       },
       headers: {
-        authorization: 'bearer header-token'
+        authorization: 'bearer header-token',
+        cookies: 'access_token=cookie-token;'
       },
     };
     var res = {
@@ -85,6 +96,8 @@ describe('bearerToken', function () {
     }
     bearerToken()(req, res);
   });
+
+  
 
 
 });
