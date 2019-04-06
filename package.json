@@ -19,6 +19,12 @@
       "url": "https://github.com/tkellen/node-express-bearer-token/blob/master/LICENSE"
     }
   ],
+  "keywords": [
+    "bearer token",
+    "bearer token middleware",
+    "express token",
+    "authorization bearer"
+  ],
   "main": "index.js",
   "engines": {
     "node": ">= 6.0.0"
@@ -27,16 +33,10 @@
     "test": "mocha -R spec test"
   },
   "devDependencies": {
-    "chai": "1.9.1",
+    "chai": "^4.2.0",
     "cookie-signature": "^1.1.0",
-    "mocha": "1.18.2"
+    "mocha": "^6.0.2"
   },
-  "keywords": [
-    "bearer token",
-    "bearer token middleware",
-    "express token",
-    "authorization bearer"
-  ],
   "dependencies": {
     "cookie": "^0.3.1",
     "cookie-parser": "^1.4.4"
