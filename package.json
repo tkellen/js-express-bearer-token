@@ -1,7 +1,7 @@
 {
   "name": "express-bearer-token",
   "description": "Bearer token middleware for express.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "homepage": "https://github.com/tkellen/node-express-bearer-token",
   "authors": [
     "Tyler Kellen <tyler@sleekcode.net>"
@@ -21,7 +21,7 @@
   ],
   "main": "index.js",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 6.0.0"
   },
   "scripts": {
     "test": "mocha -R spec test"
@@ -39,6 +39,6 @@
   ],
   "dependencies": {
     "cookie": "^0.3.1",
-    "cookie-parser": "^1.4.3"
+    "cookie-parser": "^1.4.4"
   }
 }
