@@ -1,30 +1,35 @@
-var parseCookie = require('cookie').parse;
-var decodeCookie = require('cookie-parser').signedCookie;
+const parseCookie = require('cookie').parse;
+const decodeCookie = require('cookie-parser').signedCookie;
 
-function getCookie (serialized_cookies, key) { return parseCookie(serialized_cookies)[key] || false };
+const getCookie = (serialized_cookies, key) => parseCookie(serialized_cookies)[key] || false;
 
-module.exports = function(opts) {
+module.exports = opts => {
   try {
-
     if (!opts) {
       opts = {
         cookie: false,
-      }
+      };
     }
 
-    var queryKey = opts.queryKey || 'access_token';
-    var bodyKey = opts.bodyKey || 'access_token';
-    var headerKey = opts.headerKey || 'Bearer';
-    var reqKey = opts.reqKey || 'token';
-    var cookie = opts.cookie;
-    
-    if (cookie && !cookie.key) { cookie.key = 'access_token' };
+    const queryKey = opts.queryKey || 'access_token';
+    const bodyKey = opts.bodyKey || 'access_token';
+    const headerKey = opts.headerKey || 'Bearer';
+    const reqKey = opts.reqKey || 'token';
+    const cookie = opts.cookie;
+
+    if (cookie && !cookie.key) {
+      cookie.key = 'access_token';
+    }
+
     if (cookie && cookie.signed && !cookie.secret) {
-      throw new Error('[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property');
+      throw new Error(
+        '[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property'
+      );
     }
 
-    return function (req, res, next) {
-      var token, error;
+    return (req, res, next) => {
+      let token;
+      let error;
 
       // query
       if (req.query && req.query[queryKey]) {
@@ -43,7 +48,7 @@ module.exports = function(opts) {
       if (req.headers) {
         // authorization header
         if (req.headers.authorization) {
-          var parts = req.headers.authorization.split(' ');
+          const parts = req.headers.authorization.split(' ');
           if (parts.length === 2 && parts[0] === headerKey) {
             if (token) {
               error = true;
@@ -54,9 +59,11 @@ module.exports = function(opts) {
 
         // cookie
         if (cookie && req.headers.cookie) {
-          var plainCookie = getCookie(req.headers.cookie || '', cookie.key); // seeks the key
+          const plainCookie = getCookie(req.headers.cookie || '', cookie.key); // seeks the key
           if (plainCookie) {
-            var cookieToken = (cookie.signed) ? decodeCookie(plainCookie, cookie.secret) : plainCookie;
+            const cookieToken = cookie.signed
+              ? decodeCookie(plainCookie, cookie.secret)
+              : plainCookie;
 
             if (cookieToken) {
               if (token) {
@@ -65,7 +72,6 @@ module.exports = function(opts) {
               token = cookieToken;
             }
           }
-          
         }
       }
 
@@ -77,7 +83,6 @@ module.exports = function(opts) {
         req[reqKey] = token;
         next();
       }
-    
     };
   } catch (e) {
     console.error(e);

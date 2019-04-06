@@ -1,3 +1,9 @@
+v2.4.0:
+  date: 2019-04-06
+  changes:
+    - update dependenices
+    - swap from yarn to npm package manager
+    - update syntax to es6
 v2.3.0:
   date: 2019-04-06
   changes:
