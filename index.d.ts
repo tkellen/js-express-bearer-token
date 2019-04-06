@@ -23,6 +23,7 @@ import * as express from "express";
  * - The key access_token in the request body.
  * - The key access_token in the request params.
  * - The value from the header Authorization: Bearer <token>.
+ * - Will check headers cookies if has any 'access_token=TOKEN;'
  * 
  * If a token is found, it will be stored on req.token. 
  * If a token has been provided in more than one location, the request will be aborted immediately with HTTP status code 400 (per RFC6750).
@@ -52,6 +53,15 @@ declare namespace bearerToken {
          * Specify the key that will be used to bind the token to (if found on the request).
          */
         reqKey?: string;
+
+        /**
+         * Specify cookie options with key, AND if is signed, pass a secret.
+         */
+        cookie?: {
+            signed: boolean,
+            key: string,
+            secret: string,
+        };
     }
     function bearerToken(options?: BearerTokenOptions): express.Handler;
 }

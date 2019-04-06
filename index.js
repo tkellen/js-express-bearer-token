@@ -1,42 +1,85 @@
+var parseCookie = require('cookie').parse;
+var decodeCookie = require('cookie-parser').signedCookie;
+
+function getCookie (serialized_cookies, key) { return parseCookie(serialized_cookies)[key] || false };
+
 module.exports = function(opts) {
-  if (!opts) {
-    opts = {};
-  }
-  var queryKey = opts.queryKey || 'access_token';
-  var bodyKey = opts.bodyKey || 'access_token';
-  var headerKey = opts.headerKey || 'Bearer';
-  var reqKey = opts.reqKey || 'token';
-  return function (req, res, next) {
-    var token, error;
+  try {
 
-    if (req.query && req.query[queryKey]) {
-      token = req.query[queryKey];
-    }
-
-    if (req.body && req.body[bodyKey]) {
-      if (token) {
-        error = true;
+    if (!opts) {
+      opts = {
+        cookie: false,
       }
-      token = req.body[bodyKey];
     }
 
-    if (req.headers && req.headers.authorization) {
-      var parts = req.headers.authorization.split(' ');
-      if (parts.length === 2 && parts[0] === headerKey) {
+    var queryKey = opts.queryKey || 'access_token';
+    var bodyKey = opts.bodyKey || 'access_token';
+    var headerKey = opts.headerKey || 'Bearer';
+    var reqKey = opts.reqKey || 'token';
+    var cookie = opts.cookie;
+    
+    if (cookie && !cookie.key) { cookie.key = 'access_token' };
+    if (cookie && cookie.signed && !cookie.secret) {
+      throw new Error('[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property');
+    }
+
+    return function (req, res, next) {
+      var token, error;
+
+      // query
+      if (req.query && req.query[queryKey]) {
+        token = req.query[queryKey];
+      }
+
+      // body
+      if (req.body && req.body[bodyKey]) {
         if (token) {
           error = true;
         }
-        token = parts[1];
+        token = req.body[bodyKey];
       }
-    }
 
-    // RFC6750 states the access_token MUST NOT be provided
-    // in more than one place in a single request.
-    if (error) {
-      res.status(400).send();
-    } else {
-      req[reqKey] = token;
-      next();
-    }
-  };
+      // headers
+      if (req.headers) {
+        // authorization header
+        if (req.headers.authorization) {
+          var parts = req.headers.authorization.split(' ');
+          if (parts.length === 2 && parts[0] === headerKey) {
+            if (token) {
+              error = true;
+            }
+            token = parts[1];
+          }
+        }
+
+        // cookie
+        if (cookie && req.headers.cookie) {
+          var plainCookie = getCookie(req.headers.cookie || '', cookie.key); // seeks the key
+          if (plainCookie) {
+            var cookieToken = (cookie.signed) ? decodeCookie(plainCookie, cookie.secret) : plainCookie;
+
+            if (cookieToken) {
+              if (token) {
+                error = true;
+              }
+              token = cookieToken;
+            }
+          }
+          
+        }
+      }
+
+      // RFC6750 states the access_token MUST NOT be provided
+      // in more than one place in a single request.
+      if (error) {
+        res.status(400).send();
+      } else {
+        req[reqKey] = token;
+        next();
+      }
+    
+    };
+  } catch (e) {
+    console.error(e);
+  }
 };

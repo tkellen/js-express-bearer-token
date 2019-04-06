@@ -1,12 +1,14 @@
 const expect = require('chai').expect;
 const bearerToken = require('./');
+const cookie = require('cookie-signature');
 
 describe('bearerToken', function () {
   var token = 'test-token';
+  var secret = 'SUPER_SECRET';
 
   it('finds a bearer token in post body under "access_token" and sets it to req.token', function (done) {
     var req = {body:{access_token:token}};
-    bearerToken()(req, {}, function () {
+    bearerToken('secret')(req, {}, function () {
       expect(req.token).to.equal(token);
       done();
     });
@@ -52,6 +54,24 @@ describe('bearerToken', function () {
     });
   });
 
+  it('finds a bearer token in header SIGNED cookies[<anykey>] and sets it to req.token', function (done) {
+    // simulate the res.cookie signed prefix 's:'
+    var signedCookie = encodeURI('s:' + cookie.sign(token, secret)); 
+    var req = { headers: { cookie: 'test=' + signedCookie + '; ' } };
+    bearerToken({ cookie: { key:'test', signed: true, secret: secret } })(req, {}, function () {
+      expect(req.token).to.equal(token);
+      done();
+    });
+  });
+
+  it('finds a bearer token in header NON SIGNED cookies[<anykey>] and sets it to req.token', function (done) {
+    var req = {headers:{cookie: 'test='+token+'; '}};
+    bearerToken({cookie:{key: 'test'}})(req, {}, function () {
+      expect(req.token).to.equal(token);
+      done();
+    });
+  });
+
   it('finds a bearer token and sets it to req[<anykey>]', function (done) {
     var req = {body:{access_token:token}};
     var reqKey = 'test';
@@ -60,6 +80,8 @@ describe('bearerToken', function () {
       done();
     });
   });
+
+  
 
   it('aborts with 400 if token is provided in more than one location', function (done) {
     var req = {
@@ -70,7 +92,8 @@ describe('bearerToken', function () {
         access_token: 'query-token'
       },
       headers: {
-        authorization: 'bearer header-token'
+        authorization: 'bearer header-token',
+        cookies: 'access_token=cookie-token;'
       },
     };
     var res = {
@@ -85,6 +108,8 @@ describe('bearerToken', function () {
     }
     bearerToken()(req, res);
   });
+
+  
 
 
 });
