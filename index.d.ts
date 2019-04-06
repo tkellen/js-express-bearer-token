@@ -56,4 +56,11 @@ declare namespace bearerToken {
     function bearerToken(options?: BearerTokenOptions): express.Handler;
 }
 
+declare global {
+  namespace Express {
+      export interface Request {
+          token?: string
+      }
+  }
+}
 export = bearerToken;
