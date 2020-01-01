@@ -78,7 +78,8 @@ module.exports = opts => {
       // RFC6750 states the access_token MUST NOT be provided
       // in more than one place in a single request.
       if (error) {
-        res.status(400).send();
+        res.status(400);
+        next(new Error("Multiple tokens provided"));
       } else {
         req[reqKey] = token;
         next();
