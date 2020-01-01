@@ -53,4 +53,4 @@ app.use(bearerToken({
 
 As of version 2.2.0 we've added initial support for TypeScript. 
 
-[RFC6750]: https://xml.resource.org/html/rfc6750
+[RFC6750]: https://tools.ietf.org/html/rfc6750
