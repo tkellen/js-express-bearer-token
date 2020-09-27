@@ -21,10 +21,8 @@ module.exports = opts => {
       cookie.key = 'access_token';
     }
 
-    if (cookie && cookie.signed && !cookie.secret) {
-      throw new Error(
-        '[express-bearer-token]: You must provide a secret token to cookie attribute, or disable signed property'
-      );
+    if (cookie && cookie.secret) {
+      cookie.signed = true;
     }
 
     return (req, res, next) => {
