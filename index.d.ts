@@ -58,7 +58,7 @@ declare namespace bearerToken {
          * Specify cookie options with key, AND if is signed, pass a secret.
          */
         cookie?: {
-            signed: boolean,
+            signed?: boolean,
             key: string,
             secret: string,
         };
