@@ -1,10 +1,11 @@
 {
   "name": "express-bearer-token",
   "description": "Bearer token middleware for express.",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "homepage": "https://github.com/tkellen/node-express-bearer-token",
   "authors": [
-    "Tyler Kellen <tyler@sleekcode.net>"
+    "Tyler Kellen <tyler@sleekcode.net>",
+    "Thomas Boutell <tom@apostrophecms.com>"
   ],
   "repository": {
     "type": "git",
@@ -35,10 +36,10 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "cookie-signature": "^1.1.0",
-    "mocha": "^6.0.2"
+    "mocha": "^10.8.2"
   },
   "dependencies": {
-    "cookie": "^0.3.1",
+    "cookie": "^1.0.1",
     "cookie-parser": "^1.4.4"
   }
 }
